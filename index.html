@@ -634,209 +634,205 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script>
-  
-     
-  // Add 10 more items to existing menu without changing anything else
-  const extraItems = [
-    { id: 41, name: "Strawberry Shake", category: "Beverages", price: 70, img: "https://images.unsplash.com/photo-1586201375761-83865001e7c0?w=400" },
-    { id: 42, name: "Chocolate Shake", category: "Beverages", price: 75, img: "https://images.unsplash.com/photo-1586201375761-83865001e7c0?w=400" },
-    { id: 43, name: "Cheese Croissant", category: "Bakery Items", price: 80, img: "https://images.unsplash.com/photo-1603074569706-f3c1c8d16c3b?w=400" },
-    { id: 44, name: "Red Velvet Cupcake", category: "Bakery Items", price: 90, img: "https://images.unsplash.com/photo-1603074569706-f3c1c8d16c3b?w=400" },
-    { id: 45, name: "Paneer Sandwich", category: "Savory Snacks", price: 65, img: "https://images.unsplash.com/photo-1623683943387-b76cfecc7adf?w=400" },
-    { id: 46, name: "Masala Dosa", category: "Savory Snacks", price: 70, img: "https://images.unsplash.com/photo-1608742843860-5e4f6598c5f1?w=400" },
-    { id: 47, name: "Lemon Tart", category: "Desserts & Treats", price: 85, img: "https://images.unsplash.com/photo-1599785209791-0e7f38d8c7c1?w=400" },
-    { id: 48, name: "Coffee Brownie", category: "Desserts & Treats", price: 90, img: "https://images.unsplash.com/photo-1599785209791-0e7f38d8c7c1?w=400" },
-    { id: 49, name: "Herbal Tea", category: "Beverages", price: 60, img: "https://images.unsplash.com/photo-1603052875276-20b104c27e0c?w=400" },
-    { id: 50, name: "Matcha Cake", category: "Desserts & Treats", price: 95, img: "https://images.unsplash.com/photo-1599785209791-0e7f38d8c7c1?w=400" }
-  ];
-
-  // Get existing menu from localStorage
-  let existingMenu = JSON.parse(localStorage.getItem("menuItems")) || [];
-
-  // Add extra items
-  existingMenu = [...existingMenu, ...extraItems];
-
-  // Store back in localStorage
-  localStorage.setItem("menuItems", JSON.stringify(existingMenu));
 
 
+<script>
+  // PRE-POPULATE 10 MENU ITEMS IF NOT ALREADY SET
+  if (!localStorage.getItem("menuItems")) {
+    const sampleMenu = [
+      { id: 1, name: "Masala Chai", category: "Tea", price: 30, img: "https://images.unsplash.com/photo-1585079543830-7b6e63ebdc22?w=400" },
+      { id: 2, name: "Ginger Tea", category: "Tea", price: 35, img: "https://images.unsplash.com/photo-1562440499-64c145d0b2cd?w=400" },
+      { id: 3, name: "Lemon Tea", category: "Tea", price: 25, img: "https://images.unsplash.com/photo-1608420154954-19193ab9fa44?w=400" },
+      { id: 4, name: "Coffee", category: "Coffee", price: 40, img: "https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=400" },
+      { id: 5, name: "Cold Coffee", category: "Coffee", price: 50, img: "https://images.unsplash.com/photo-1590080879720-fc08e6bcd746?w=400" },
+      { id: 6, name: "Green Tea", category: "Tea", price: 45, img: "https://images.unsplash.com/photo-1617196033600-90d946c9f5e0?w=400" },
+      { id: 7, name: "Black Coffee", category: "Coffee", price: 35, img: "https://images.unsplash.com/photo-1511920170033-f8396924c348?w=400" },
+      { id: 8, name: "Herbal Tea", category: "Tea", price: 40, img: "https://images.unsplash.com/photo-1584270354949-6e776b1e9c5c?w=400" },
+      { id: 9, name: "Espresso", category: "Coffee", price: 60, img: "https://images.unsplash.com/photo-1570968915860-6f5d1b102d29?w=400" },
+      { id: 10, name: "Cappuccino", category: "Coffee", price: 70, img: "https://images.unsplash.com/photo-1601924582975-18f7b5ebd51a?w=400" }
+    ];
+    localStorage.setItem("menuItems", JSON.stringify(sampleMenu));
+  }
 
-      
-      let cart = [];
-      const payModal = new bootstrap.Modal(
-        document.getElementById("paymentModal")
-      );
+  let cart = [];
+  const payModal = new bootstrap.Modal(
+    document.getElementById("paymentModal")
+  );
 
-      function getMenu() {
-        return JSON.parse(localStorage.getItem("menuItems")) || [];
-      }
+  function getMenu() {
+    return JSON.parse(localStorage.getItem("menuItems")) || [];
+  }
 
-      function displayMenu(category = "All") {
-        const grid = document.getElementById("menu-grid");
-        grid.innerHTML = "";
-        const menuItems = getMenu();
+  function displayMenu(category = "All") {
+    const grid = document.getElementById("menu-grid");
+    grid.innerHTML = "";
+    const menuItems = getMenu();
 
-        if (menuItems.length === 0) {
-          grid.innerHTML =
-            '<div class="col-12 text-center py-5"><h3>Menu is empty. Add items in Admin Panel.</h3></div>';
-          return;
-        }
+    if (menuItems.length === 0) {
+      grid.innerHTML =
+        '<div class="col-12 text-center py-5"><h3>Menu is empty. Add items in Admin Panel.</h3></div>';
+      return;
+    }
 
-        const filtered =
-          category === "All"
-            ? menuItems
-            : menuItems.filter((i) => i.category === category);
+    const filtered =
+      category === "All"
+        ? menuItems
+        : menuItems.filter((i) => i.category === category);
 
-        filtered.forEach((item) => {
-          grid.innerHTML += `
-            <div class="col-6 col-md-4 col-lg-3 animate__animated animate__fadeInUp">
-                <div class="item-card">
-                    <div class="card-img-wrapper">
-                        <img src="${item.img}" alt="${item.name}" onerror="this.src='https://images.unsplash.com/photo-1544787210-22bb83063bd5?w=400'">
-                        <div class="position-absolute top-0 end-0 m-2">
-                            <span class="badge bg-warning text-dark">₹${item.price}</span>
-                        </div>
-                    </div>
-                    <div class="p-3">
-                        <h6 class="fw-bold mb-1">${item.name}</h6>
-                        <p class="text-muted small mb-3">${item.category}</p>
-                        <button class="btn btn-primary btn-sm w-100 rounded-pill" onclick="addToCart(${item.id})">ADD TO BASKET +</button>
+    filtered.forEach((item) => {
+      grid.innerHTML += `
+        <div class="col-6 col-md-4 col-lg-3 animate__animated animate__fadeInUp">
+            <div class="item-card">
+                <div class="card-img-wrapper">
+                    <img src="${item.img}" alt="${item.name}" onerror="this.src='https://images.unsplash.com/photo-1544787210-22bb83063bd5?w=400'">
+                    <div class="position-absolute top-0 end-0 m-2">
+                        <span class="badge bg-warning text-dark">₹${item.price}</span>
                     </div>
                 </div>
-            </div>`;
-        });
-      }
-s
-      function filterMenu(cat, btn) {
-        document
-          .querySelectorAll(".menu-filter-btn")
-          .forEach((b) => b.classList.remove("active"));
-        btn.classList.add("active");
-        displayMenu(cat);
-      }
+                <div class="p-3">
+                    <h6 class="fw-bold mb-1">${item.name}</h6>
+                    <p class="text-muted small mb-3">${item.category}</p>
+                    <button class="btn btn-primary btn-sm w-100 rounded-pill" onclick="addToCart(${item.id})">ADD TO BASKET +</button>
+                </div>
+            </div>
+        </div>`;
+    });
+  }
 
-      function toggleSidebar() {
-        document.getElementById("order-sidebar").classList.toggle("active");
-      }
+  function filterMenu(cat, btn) {
+    document
+      .querySelectorAll(".menu-filter-btn")
+      .forEach((b) => b.classList.remove("active"));
+    btn.classList.add("active");
+    displayMenu(cat);
+  }
 
-      function addToCart(id) {
-        const menuItems = getMenu();
-        const product = menuItems.find((p) => p.id === id);
-        const inCart = cart.find((c) => c.id === id);
-        if (inCart) inCart.qty++;
-        else cart.push({ ...product, qty: 1 });
-        updateCartUI();
-        if (
-          !document.getElementById("order-sidebar").classList.contains("active")
+  function toggleSidebar() {
+    document.getElementById("order-sidebar").classList.toggle("active");
+  }
+
+  function addToCart(id) {
+    const menuItems = getMenu();
+    const product = menuItems.find((p) => p.id === id);
+    const inCart = cart.find((c) => c.id === id);
+    if (inCart) inCart.qty++;
+    else cart.push({ ...product, qty: 1 });
+    updateCartUI();
+    if (
+      !document.getElementById("order-sidebar").classList.contains("active")
+    )
+      toggleSidebar();
+  }
+
+  function updateCartUI() {
+    const container = document.getElementById("basket-items");
+    let total = 0,
+      count = 0;
+    if (cart.length === 0) {
+      container.innerHTML = `<div class="text-center mt-5 opacity-25"><i class="fas fa-shopping-basket fa-4x"></i><p class="mt-2">Your basket is empty</p></div>`;
+    } else {
+      container.innerHTML = cart
+        .map((item, index) => {
+          total += item.price * item.qty;
+          count += item.qty;
+          return `
+          <div class="basket-item">
+              <div style="flex:1">
+                  <h6 class="m-0 fw-bold small">${item.name}</h6>
+                  <small class="text-muted">₹${item.price} x ${item.qty}</small>
+              </div>
+              <div class="d-flex align-items-center gap-2">
+                  <button class="btn btn-sm btn-dark px-2 py-0" onclick="changeQty(${index}, -1)">-</button>
+                  <span class="fw-bold">${item.qty}</span>
+                  <button class="btn btn-sm btn-dark px-2 py-0" onclick="changeQty(${index}, 1)">+</button>
+              </div>
+          </div>`;
+        })
+        .join("");
+    }
+    document.getElementById("cart-badge").innerText = count;
+    document.getElementById("total-val").innerText = total;
+    document.getElementById("qr-amount").innerText = total;
+    document.getElementById("r-total").innerText = total;
+  }
+
+  function changeQty(idx, delta) {
+    if (cart[idx].qty + delta > 0) cart[idx].qty += delta;
+    else cart.splice(idx, 1);
+    updateCartUI();
+  }
+
+  function checkoutOrder() {
+    if (cart.length === 0) return alert("Please select some items first!");
+    const total = document.getElementById("total-val").innerText;
+    const upiUrl = `upi://pay?pa=chaisupreme@upi&am=${total}&tn=ChaiOrder&cu=INR`;
+    document.getElementById(
+      "upi-qr"
+    ).src = `https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${encodeURIComponent(
+      upiUrl
+    )}`;
+    document.getElementById("payment-screen").style.display = "block";
+    document.getElementById("receipt-screen").style.display = "none";
+    payModal.show();
+  }
+
+  function confirmPayment() {
+    document.getElementById("pay-content").style.display = "none";
+    document.getElementById("pay-loader").style.display = "inline-block";
+
+    let rev = Number(localStorage.getItem("chai_totalRevenue") || 0);
+    let ord = Number(localStorage.getItem("chai_totalOrders") || 0);
+    let currentTotal = Number(
+      document.getElementById("total-val").innerText
+    );
+
+    localStorage.setItem("chai_totalRevenue", rev + currentTotal);
+    localStorage.setItem("chai_totalOrders", ord + 1);
+
+    setTimeout(() => {
+      document.getElementById("payment-screen").style.display = "none";
+      document.getElementById("receipt-screen").style.display = "block";
+      document.getElementById("receipt-date").innerText =
+        new Date().toLocaleString();
+      document.getElementById("r-table").innerText =
+        document.getElementById("table-number").value;
+      document.getElementById("r-token").innerText =
+        "CS-" + Math.floor(1000 + Math.random() * 9000);
+      document.getElementById("receipt-items-list").innerHTML = cart
+        .map(
+          (i) =>
+            `<div class="d-flex justify-content-between mb-1"><span>${
+              i.name
+            } x${i.qty}</span><span>₹${i.price * i.qty}</span></div>`
         )
-          toggleSidebar();
-      }
+        .join("");
+      cart = [];
+      updateCartUI();
+      toggleSidebar();
+    }, 1500);
+  }
 
-      function updateCartUI() {
-        const container = document.getElementById("basket-items");
-        let total = 0,
-          count = 0;
-        if (cart.length === 0) {
-          container.innerHTML = `<div class="text-center mt-5 opacity-25"><i class="fas fa-shopping-basket fa-4x"></i><p class="mt-2">Your basket is empty</p></div>`;
-        } else {
-          container.innerHTML = cart
-            .map((item, index) => {
-              total += item.price * item.qty;
-              count += item.qty;
-              return `
-              <div class="basket-item">
-                  <div style="flex:1">
-                      <h6 class="m-0 fw-bold small">${item.name}</h6>
-                      <small class="text-muted">₹${item.price} x ${item.qty}</small>
-                  </div>
-                  <div class="d-flex align-items-center gap-2">
-                      <button class="btn btn-sm btn-dark px-2 py-0" onclick="changeQty(${index}, -1)">-</button>
-                      <span class="fw-bold">${item.qty}</span>
-                      <button class="btn btn-sm btn-dark px-2 py-0" onclick="changeQty(${index}, 1)">+</button>
-                  </div>
-              </div>`;
-            })
-            .join("");
-        }
-        document.getElementById("cart-badge").innerText = count;
-        document.getElementById("total-val").innerText = total;
-        document.getElementById("qr-amount").innerText = total;
-        document.getElementById("r-total").innerText = total;
-      }
+  function handleFeedback(e) {
+    setTimeout(() => {
+      document.getElementById("feedbackForm").style.display = "none";
+      document.getElementById("successMsg").style.display = "block";
+    }, 500);
+  }
 
-      function changeQty(idx, delta) {
-        if (cart[idx].qty + delta > 0) cart[idx].qty += delta;
-        else cart.splice(idx, 1);
-        updateCartUI();
-      }
+  window.onload = () => {
+    displayMenu();
+    updateCartUI();
+  };
+  window.addEventListener("storage", () => {
+    displayMenu();
+  });
+</script>
 
-      function checkoutOrder() {
-        if (cart.length === 0) return alert("Please select some items first!");
-        const total = document.getElementById("total-val").innerText;
-        const upiUrl = `upi://pay?pa=chaisupreme@upi&am=${total}&tn=ChaiOrder&cu=INR`;
-        document.getElementById(
-          "upi-qr"
-        ).src = `https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${encodeURIComponent(
-          upiUrl
-        )}`;
-        document.getElementById("payment-screen").style.display = "block";
-        document.getElementById("receipt-screen").style.display = "none";
-        payModal.show();
-      }
 
-      function confirmPayment() {
-        document.getElementById("pay-content").style.display = "none";
-        document.getElementById("pay-loader").style.display = "inline-block";
 
-        let rev = Number(localStorage.getItem("chai_totalRevenue") || 0);
-        let ord = Number(localStorage.getItem("chai_totalOrders") || 0);
-        let currentTotal = Number(
-          document.getElementById("total-val").innerText
-        );
-
-        localStorage.setItem("chai_totalRevenue", rev + currentTotal);
-        localStorage.setItem("chai_totalOrders", ord + 1);
-
-        setTimeout(() => {
-          document.getElementById("payment-screen").style.display = "none";
-          document.getElementById("receipt-screen").style.display = "block";
-          document.getElementById("receipt-date").innerText =
-            new Date().toLocaleString();
-          document.getElementById("r-table").innerText =
-            document.getElementById("table-number").value;
-          document.getElementById("r-token").innerText =
-            "CS-" + Math.floor(1000 + Math.random() * 9000);
-          document.getElementById("receipt-items-list").innerHTML = cart
-            .map(
-              (i) =>
-                `<div class="d-flex justify-content-between mb-1"><span>${
-                  i.name
-                } x${i.qty}</span><span>₹${i.price * i.qty}</span></div>`
-            )
-            .join("");
-          cart = [];
-          updateCartUI();
-          toggleSidebar();
-        }, 1500);
-      }
-
-      function handleFeedback(e) {
-        setTimeout(() => {
-          document.getElementById("feedbackForm").style.display = "none";
-          document.getElementById("successMsg").style.display = "block";
-        }, 500);
-      }
-
-      window.onload = () => {
-        displayMenu();
-        updateCartUI();
-      };
-      window.addEventListener("storage", () => {
-        displayMenu();
-      });
-    </script>
+    
   </body>
 </html>
+
 
 
